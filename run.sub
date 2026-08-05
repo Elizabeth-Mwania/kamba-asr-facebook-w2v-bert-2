@@ -1,0 +1,20 @@
+universe              = docker
+docker_image          = badrnlp/hf-gpu-asr:0.2
+
+transfer_executable = False
+
+initialdir            = /project_dir/
+executable            = /project_dir/Ethio-ASR/bash_scripts/run_train_ethio_asr.sh
+
+output                = logs/run.sh.$(ClusterId).$(Month)_$(Day)_$(SUBMIT_TIME).out
+error                 = logs/run.sh.$(ClusterId).$(Month)_$(Day)_$(SUBMIT_TIME).err
+log                   = logs/run.sh.$(ClusterId).$(Month)_$(Day)_$(SUBMIT_TIME).log
+
+request_CPUs          = 12
+request_memory        = 50G
+request_GPUs          = 1
+
+# Limit to the failing node for testing
+requirements          = (TARGET.UidDomain == "lsv.uni-saarland.de") && (machine == "cl18lx.lsv.uni-saarland.de")
+queue 1
+

@@ -1,0 +1,65 @@
+# Virtual environment 
+.venv/
+venv/
+env/
+
+# Environment variables 
+.env
+
+# Model outputs and checkpoints
+outputs/
+checkpoints/
+best_model/
+zeroshot_model/
+model_zeroshot/
+*.bin
+*.safetensors
+*.pt
+*.pth
+
+# HuggingFace cache
+huggingface_cache/
+.cache/
+
+# Dataset cache 
+.dataset_cache/
+cache_train/
+cache_val/
+cache_test/
+cache_meta.json
+**/cached_*
+
+# Tokenizer and processor
+ctc_tokenizer/
+processor/
+
+# Prediction JSON outputs
+json_outputs/
+json_outputs_monolingual/
+predictions_json/
+
+# Python cache 
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# Jupyter / Colab
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Logs 
+logs/
+*.log
+runs/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE 
+.vscode/
+.idea/
+*.swp

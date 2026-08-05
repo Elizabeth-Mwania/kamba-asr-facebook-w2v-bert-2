@@ -1,0 +1,47 @@
+# Kamba ASR fine-tuning with facebook/w2v-bert-2.0.
+project: "kamba-asr"
+output_dir: "outputs/kamba-asr-facebook-w2v-bert-2-10epochs"
+seed: 42
+
+pretrained_model: "facebook/w2v-bert-2.0"
+freeze_feature_encoder: true
+add_final_layer_adapter: true
+
+batch_size: 4
+gradient_accumulation_steps: 8
+num_epochs: 10
+max_steps: -1
+learning_rate: 0.00003
+warmup_ratio: 0.1
+fp16: false
+bf16: false
+gradient_checkpointing: true
+save_steps: 500
+eval_steps: 500
+logging_steps: 10
+save_total_limit: 2
+
+# The source dataset exposes only a train split. The loader creates reproducible,
+# speaker-disjoint splits targeting 80/10/10 by speaker groups before training.
+# (With the dataset's six speakers, this resolves to 4/1/1 speaker groups.)
+use_custom_dataset: false
+dataset_path: "DDD-Kenya/Kamba-ASR-Data-Subset-484H"
+train_split: "train"
+eval_split: "validation"
+test_split: "test"
+create_splits_if_missing: true
+validation_split_size: 0.10
+test_split_size: 0.10
+split_group_column: null
+validation_sample_size: 500
+test_sample_size: 500
+max_train_hours: 10.0
+language: "all"
+sample: false
+report_to: str = "none"
+
+# Kamba uses Latin characters plus ĩ and ũ. It has no language column, so no
+# language token should be added to targets.
+add_language_tokens: false
+apply_accent_replacements: false
+character_set: "abcdefghijklmnoprstuvwyĩũ' 0123456789"

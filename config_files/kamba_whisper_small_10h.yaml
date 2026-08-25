@@ -1,0 +1,14 @@
+# Experiment record for the command-line Whisper workflow.
+model_id: "openai/whisper-small"
+language_prompt: "sw"  # Kamba is unsupported by Whisper; record this proxy explicitly.
+dataset: "data/kamba_10h_v1/dataset"
+dataset_manifest: "data/kamba_10h_v1/benchmark_manifest.json"
+train_hours: 10.0
+validation_clips: 500
+test_clips: 500
+seed: 42
+epochs: 10
+batch_size: 4
+gradient_accumulation_steps: 8
+learning_rate: 0.00001
+metrics: [wer, cer]

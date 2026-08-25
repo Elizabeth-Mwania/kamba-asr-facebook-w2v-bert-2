@@ -1,8 +1,7 @@
-# Kamba ASR — Fine-tuning Wav2Vec-BERT 2.0 for Kamba (Kikamba)
+# Kamba ASR — Fine-tuning ASR models for Kamba (Kikamba)
 
 > **Kamba (Kikamba)** is a Bantu language spoken by approximately 4 million people in Kenya.  
-> This repository presents the first ASR baseline for Kamba, fine-tuned on 10 hours of speech  
-> from the [DDD-Kenya/Kamba-ASR-Data-Subset-484H](https://huggingface.co/datasets/DDD-Kenya/Kamba-ASR-Data-Subset-484H) corpus.
+> This repository contains a Wav2Vec-BERT 2.0 baseline and a reusable Whisper Small workflow for Kamba, fine-tuned on 10 hours of speech from the [Kamba-ASR-Data-Subset-484H](https://huggingface.co/datasets/Digital-Divide-Data/Kamba-ASR-Data-Subset-484H) corpus.
 
 ---
 
@@ -25,6 +24,38 @@
 | Test | 500 | ~1.5 hours |
 
 Splits are created by streaming the first 500 clips as test, the next 500 as validation, and the remainder (up to 10 hours) as training — ensuring no overlap. The dataset has only a `train` split on HuggingFace; splits are created locally.
+
+## Reusable benchmark data
+
+Materialize the selected subset once, then point every model at it. This downloads and stores only the selected raw audio and transcripts; it does **not** cache the complete 484-hour corpus or model-specific features.
+
+```shell
+python scripts/materialize_kamba_subset.py --output_dir data/kamba_10h_v1
+```
+
+The directory contains `dataset/` (self-contained 16 kHz WAV audio and metadata) and `benchmark_manifest.json` (the exact source row indices and selection policy). Keep it outside Git—`data/` is ignored—and back it up to Drive or durable local storage. It is the fixed benchmark for all experiments.
+
+Do not persist Whisper log-Mel features with `Dataset.map`: 30-second Whisper features are nearly 1 MB per clip and create a large model-specific disk cache. The Whisper workflow extracts them only for the current batch.
+
+The sequential split deliberately reproduces the existing Wav2Vec-BERT setup. The source has six speakers, so it is not speaker-disjoint; report that limitation and create a separate, explicitly versioned speaker-disjoint benchmark if the research question needs speaker generalisation. Never silently change the manifest between models.
+
+### Whisper Small
+
+```shell
+python scripts/train_whisper.py \
+  --data_dir data/kamba_10h_v1 \
+  --output_dir outputs/kamba-whisper-small-10h
+```
+
+This saves `metrics.json`, `predictions_validation.json`, and `predictions_test.json`; the research metrics are WER and CER only. The experiment record is [config_files/kamba_whisper_small_10h.yaml](config_files/kamba_whisper_small_10h.yaml). Whisper has no Kamba language token, so the current experiment uses its Swahili (`sw`) prompt as an explicit, recorded proxy—not a claim that Kamba is Swahili.
+
+### Wav2Vec-BERT 2.0 on the same benchmark
+
+Use [config_files/kamba_asr_w2v_bert_10h_benchmark.yaml](config_files/kamba_asr_w2v_bert_10h_benchmark.yaml). Unlike the original streaming configuration, this reads the materialized dataset directly and does not resplit or reselect clips.
+
+```shell
+python scripts/train_model.py --config config_files/kamba_asr_w2v_bert_10h_benchmark.yaml
+```
 
 ---
 

@@ -1,0 +1,39 @@
+# Wav2Vec-BERT 2.0 on the fixed, model-agnostic Kamba 10-hour benchmark.
+# The dataset directory was materialized once by materialize_kamba_subset.py.
+project: "kamba-asr"
+output_dir: "outputs/kamba-w2v-bert-2-10h"
+seed: 42
+
+pretrained_model: "facebook/w2v-bert-2.0"
+freeze_feature_encoder: true
+add_final_layer_adapter: true
+
+batch_size: 4
+gradient_accumulation_steps: 8
+num_epochs: 10
+max_steps: -1
+learning_rate: 0.00003
+warmup_ratio: 0.1
+fp16: true
+bf16: false
+gradient_checkpointing: true
+save_steps: 500
+eval_steps: 500
+logging_steps: 10
+save_total_limit: 1
+report_to: "none"
+
+# Never stream, resplit, shuffle-select, or time-limit this benchmark again.
+use_custom_dataset: true
+dataset_path: "data/kamba_10h_v1/dataset"
+train_split: "train"
+eval_split: "validation"
+test_split: "test"
+create_splits_if_missing: false
+max_train_hours: null
+language: "all"
+sample: false
+
+add_language_tokens: false
+apply_accent_replacements: false
+character_set: "abcdefghijklmnoprstuvwyĩũ' 0123456789"

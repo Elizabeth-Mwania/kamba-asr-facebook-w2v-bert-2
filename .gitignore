@@ -20,6 +20,7 @@ model_zeroshot/
 # HuggingFace cache
 huggingface_cache/
 .cache/
+data/
 
 # Dataset cache 
 .dataset_cache/

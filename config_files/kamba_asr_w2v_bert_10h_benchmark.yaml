@@ -2,6 +2,7 @@
 # The dataset directory was materialized once by materialize_kamba_subset.py.
 project: "kamba-asr"
 output_dir: "outputs/kamba-w2v-bert-2-10h"
+experiment_name: "facebook-w2v-bert-2.0-kamba-10h-v1"
 seed: 42
 
 pretrained_model: "facebook/w2v-bert-2.0"
@@ -22,6 +23,7 @@ eval_steps: 500
 logging_steps: 10
 save_total_limit: 1
 report_to: "none"
+dataloader_num_workers: 0
 
 # Never stream, resplit, shuffle-select, or time-limit this benchmark again.
 use_custom_dataset: true

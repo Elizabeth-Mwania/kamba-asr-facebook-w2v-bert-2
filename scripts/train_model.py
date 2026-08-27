@@ -75,6 +75,7 @@ from src.training.trainer import create_asr_trainer
 
 # load huggingface set_seed function from transformers
 from transformers import set_seed as huggingface_set_seed
+from transformers.trainer_utils import get_last_checkpoint
 
 
 # setup environment variables for wandb and huggingface
@@ -186,7 +187,7 @@ def main():
 
     try:
         language_tags = set(train_dataset['language'])
-    except KeyError:
+    except (KeyError, ValueError):
         logging.info("No 'language' column found — monolingual mode. "
                     "Language tokens will not be added to targets.")
         language_tags = None    
@@ -280,8 +281,12 @@ def main():
         config=config
     )
     
+    checkpoint_dir = os.path.join(config.output_dir, experiment_name)
+    resume_from_checkpoint = get_last_checkpoint(checkpoint_dir)
+    if resume_from_checkpoint:
+        logging.info("Resuming from checkpoint: %s", resume_from_checkpoint)
     logging.info("Starting training model for ASR...")
-    trainer.train()
+    trainer.train(resume_from_checkpoint=resume_from_checkpoint)
     
     # save model and processor
     logging.info("Saving model and processor...")

@@ -12,6 +12,7 @@ class ASRConfig:
     project: str
     output_dir: str
     seed: int
+    experiment_name: Optional[str] = None
     
     # Model settings
     pretrained_model: str
@@ -31,6 +32,7 @@ class ASRConfig:
     logging_steps: int = 10
     save_total_limit: int = 2
     report_to: str = "none"
+    dataloader_num_workers: int = 0
 
     # new model config settings
     add_final_layer_adapter: bool = True
@@ -88,6 +90,8 @@ class ASRConfig:
     
     def get_experiment_name(self) -> str:
         """Generate a consistent experiment name with timestamp."""
+        if self.experiment_name:
+            return self.experiment_name
         timestamp = datetime.datetime.now().strftime("%d%m%Y-%H%M%S")
 
         model_name_str = [

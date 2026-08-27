@@ -57,6 +57,8 @@ Use [config_files/kamba_asr_w2v_bert_10h_benchmark.yaml](config_files/kamba_asr_
 python scripts/train_model.py --config config_files/kamba_asr_w2v_bert_10h_benchmark.yaml
 ```
 
+The benchmark configuration has a fixed experiment name. If a Colab session disconnects, rerun the same command with the same persistent `output_dir`; the training script resumes the latest checkpoint automatically.
+
 ---
 
 ## Setup

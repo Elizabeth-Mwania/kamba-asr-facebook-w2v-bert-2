@@ -41,7 +41,10 @@ def create_training_args(config: ASRConfig, experiment_name: str) -> TrainingArg
         per_device_eval_batch_size=config.batch_size,
         #eval_accumulation_steps=1024,
         gradient_accumulation_steps=config.gradient_accumulation_steps,
-        dataloader_num_workers=4, 
+        # Colab recommends at most two workers and the Arrow-embedded audio
+        # benchmark is safest with a single main-process loader. More workers
+        # can freeze or destabilise the runtime on constrained sessions.
+        dataloader_num_workers=config.dataloader_num_workers,
         #ddp_find_unused_parameters=True, # this is the key parameter for distributed training
         #ddp_backend="nccl",
         fp16=config.fp16,  # Enable mixed precision

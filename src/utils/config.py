@@ -12,10 +12,10 @@ class ASRConfig:
     project: str
     output_dir: str
     seed: int
-    experiment_name: Optional[str] = None
     
     # Model settings
     pretrained_model: str
+    experiment_name: Optional[str] = None
     freeze_feature_encoder: bool = True
     
     # Training settings

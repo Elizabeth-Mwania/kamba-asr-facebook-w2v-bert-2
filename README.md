@@ -49,6 +49,12 @@ python scripts/train_whisper.py \
 
 This saves `metrics.json`, `predictions_validation.json`, and `predictions_test.json`; the research metrics are WER and CER only. The experiment record is [config_files/kamba_whisper_small_10h.yaml](config_files/kamba_whisper_small_10h.yaml). Whisper has no Kamba language token, so the current experiment uses its Swahili (`sw`) prompt as an explicit, recorded proxy—not a claim that Kamba is Swahili.
 
+If a training run completed but its final artifacts could not be saved, evaluate an existing checkpoint without retraining:
+
+```shell
+python scripts/evaluate_whisper.py --checkpoint <checkpoint-dir> --data_dir data/kamba_10h_v1 --split test
+```
+
 ### Wav2Vec-BERT 2.0 on the same benchmark
 
 Use [config_files/kamba_asr_w2v_bert_10h_benchmark.yaml](config_files/kamba_asr_w2v_bert_10h_benchmark.yaml). Unlike the original streaming configuration, this reads the materialized dataset directly and does not resplit or reselect clips.
